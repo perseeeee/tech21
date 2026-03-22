@@ -3,7 +3,9 @@ const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
+  port: Number(process.env.SMTP_PORT) || 587,
+  secure: false,
+  requireTLS: true,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -27,15 +29,21 @@ const sendEmail = async (options) => {
       html: options.message,
     };
 
-    // Attach files if provided
     if (options.attachments && Array.isArray(options.attachments)) {
       mailOptions.attachments = options.attachments;
     }
 
     await transporter.sendMail(mailOptions);
-    console.log(`📧 Email sent to: ${options.email}`);
+    console.log(`Email sent to: ${options.email}`);
   } catch (error) {
-    console.error("❌ EMAIL SEND ERROR:\n", error);
+    console.error("EMAIL SEND ERROR:", {
+      message: error.message,
+      code: error.code,
+      command: error.command,
+      response: error.response,
+      responseCode: error.responseCode,
+      reason: error.reason,
+    });
     throw new Error(`Email could not be sent: ${error.message}`);
   }
 };
