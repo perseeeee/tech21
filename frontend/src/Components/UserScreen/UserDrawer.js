@@ -31,7 +31,7 @@ const UserDrawer = ({ children }) => {
 
   // Update active tab based on current route
   useEffect(() => {
-    if (route.name === 'Home' || route.name === 'Cart' || route.name === 'Notifications' || route.name === 'Profile' || route.name === 'OrderHistory') {
+    if (route.name === 'Home' || route.name === 'Cart' || route.name === 'Profile' || route.name === 'OrderHistory') {
       setActiveTab(route.name === 'Profile' ? 'Home' : route.name);
     }
   }, [route.name]);
@@ -123,12 +123,6 @@ const UserDrawer = ({ children }) => {
       return;
     }
 
-    // Notifications is still coming soon
-    if (screenName === 'Notifications') {
-      Alert.alert('Coming Soon', 'Notifications screen is under development');
-      return;
-    }
-
     // Cart and all other registered screens navigate normally
     setActiveTab(screenName === 'Profile' ? 'Home' : screenName);
 
@@ -181,13 +175,6 @@ const UserDrawer = ({ children }) => {
       icon: 'cart-outline',
       activeIcon: 'cart',
       screen: 'Cart'
-    },
-    {
-      id: 'notifications',
-      label: 'Notifications',
-      icon: 'notifications-outline',
-      activeIcon: 'notifications',
-      screen: 'Notifications'
     },
     {
       id: 'menu',

@@ -145,11 +145,6 @@ export default function HomeScreen({ navigation }) {
   const [productReviews, setProductReviews] = useState({});
   const [loadingReviews, setLoadingReviews] = useState({});
 
-  // Notifications / Orders
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [orders, setOrders] = useState([]);
-  const [loadingOrders, setLoadingOrders] = useState(false);
-
   const flatListRef    = useRef(null);
   const autoSlideTimer = useRef(null);
   const toastOpacity   = useRef(new Animated.Value(0)).current;
@@ -216,7 +211,7 @@ export default function HomeScreen({ navigation }) {
       setUser(userData);
       const token = await getToken();
       if (!token) { navigation.reset({ index: 0, routes: [{ name: 'Login' }] }); return; }
-      await Promise.all([fetchProducts(), fetchCart(), fetchCategories(), fetchUserOrders()]);
+      await Promise.all([fetchProducts(), fetchCart(), fetchCategories()]);
     } catch (e) {
       console.error('Error loading initial data:', e);
     } finally {
@@ -228,7 +223,6 @@ export default function HomeScreen({ navigation }) {
     setRefreshing(true); 
     await loadInitialData(); 
     await fetchAllProductReviews();
-    await fetchUserOrders();
     setRefreshing(false); 
   };
 
@@ -472,25 +466,6 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.container}>
         <Header />
 
-        <View style={styles.notificationRow}>
-          <TouchableOpacity
-            style={styles.notificationButton}
-            activeOpacity={0.8}
-            onPress={() => {
-              setShowNotifications(true);
-              fetchUserOrders();
-            }}
-          >
-            <Icon name="notifications" size={18} color={THEME.accent} />
-            <Text style={styles.notificationText}>Notifications</Text>
-            {orders.length > 0 && (
-              <View style={styles.notificationBadge}>
-                <Text style={styles.notificationBadgeText}>{orders.length}</Text>
-              </View>
-            )}
-          </TouchableOpacity>
-        </View>
-        
         <ScrollView
           style={styles.scrollView}
           showsVerticalScrollIndicator={false}
@@ -576,60 +551,6 @@ export default function HomeScreen({ navigation }) {
         </ScrollView>
 
         <Toast message={toastMessage} opacity={toastOpacity} />
-
-        <Modal
-          visible={showNotifications}
-          transparent
-          animationType="fade"
-          onRequestClose={() => setShowNotifications(false)}
-        >
-          <TouchableOpacity
-            style={styles.modalOverlay}
-            activeOpacity={1}
-            onPress={() => setShowNotifications(false)}
-          >
-            <View style={styles.notificationsDropdown}>
-              <Text style={styles.categoriesTitle}>Order Notifications</Text>
-
-              {loadingOrders ? (
-                <View style={styles.notificationsEmpty}>
-                  <ActivityIndicator size="small" color={THEME.accent} />
-                </View>
-              ) : orders.length === 0 ? (
-                <View style={styles.notificationsEmpty}>
-                  <Text style={styles.emptySubtext}>No order notifications yet.</Text>
-                </View>
-              ) : (
-                <FlatList
-                  data={orders}
-                  keyExtractor={(item, i) => item?._id || item?.id || String(i)}
-                  style={styles.categoriesList}
-                  renderItem={({ item }) => {
-                    const id = item?._id || item?.id || 'N/A';
-                    const status = item?.status || 'Pending';
-                    const total = Number(item?.totalAmount ?? item?.total ?? 0).toFixed(2);
-                    const createdAt = item?.createdAt ? new Date(item.createdAt).toLocaleString() : 'N/A';
-                    const count = Array.isArray(item?.items)
-                      ? item.items.length
-                      : Array.isArray(item?.orderItems)
-                      ? item.orderItems.length
-                      : 0;
-
-                    return (
-                      <View style={styles.orderNotificationItem}>
-                        <Text style={styles.orderNotificationTitle}>Order #{String(id).slice(-8)}</Text>
-                        <Text style={styles.orderNotificationMeta}>Status: {status}</Text>
-                        <Text style={styles.orderNotificationMeta}>Total: ₱{total}</Text>
-                        <Text style={styles.orderNotificationMeta}>Items: {count}</Text>
-                        <Text style={styles.orderNotificationDate}>{createdAt}</Text>
-                      </View>
-                    );
-                  }}
-                />
-              )}
-            </View>
-          </TouchableOpacity>
-        </Modal>
 
         <Modal visible={showCategories} transparent animationType="fade" onRequestClose={() => setShowCategories(false)}>
           <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setShowCategories(false)}>
@@ -844,80 +765,5 @@ const styles = StyleSheet.create({
   selectedCategoryItem: { backgroundColor: '#EAF6FF' },
   categoryItemText: { fontSize: 15, color: THEME.textSecondary },
   selectedCategoryItemText: { color: THEME.accent, fontWeight: '600' },
-  notificationRow: {
-    paddingHorizontal: 16,
-    paddingTop: 8,
-  },
-  notificationButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    backgroundColor: THEME.surface,
-    borderWidth: 1,
-    borderColor: THEME.border,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 10,
-  },
-  notificationText: {
-    marginLeft: 6,
-    fontSize: 12,
-    fontWeight: '600',
-    color: THEME.textSecondary,
-  },
-  notificationBadge: {
-    marginLeft: 8,
-    minWidth: 18,
-    height: 18,
-    borderRadius: 9,
-    backgroundColor: THEME.accent,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 4,
-  },
-  notificationBadgeText: {
-    color: '#fff',
-    fontSize: 10,
-    fontWeight: '700',
-  },
-  notificationsDropdown: {
-    backgroundColor: THEME.surface,
-    borderWidth: 1,
-    borderColor: THEME.border,
-    marginHorizontal: 20,
-    maxHeight: 420,
-    borderRadius: 12,
-    elevation: 6,
-    shadowColor: '#0C4A6E',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-  },
-  notificationsEmpty: {
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  orderNotificationItem: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: THEME.border,
-  },
-  orderNotificationTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: THEME.textPrimary,
-    marginBottom: 4,
-  },
-  orderNotificationMeta: {
-    fontSize: 12,
-    color: THEME.textSecondary,
-    marginBottom: 2,
-  },
-  orderNotificationDate: {
-    fontSize: 11,
-    color: THEME.textMuted,
-    marginTop: 4,
-  },
 });
+
