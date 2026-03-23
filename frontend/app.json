@@ -45,11 +45,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/notification-icon.png",
           "color": "#f39c12",
-          "sounds": [
-            "./assets/notification-sound.wav"
-          ],
           "mode": "production"
         }
       ],

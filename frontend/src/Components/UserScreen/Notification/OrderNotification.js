@@ -16,7 +16,7 @@ import * as Device from 'expo-device';
 import Constants from 'expo-constants';
 import axios from 'axios';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getToken } from '../../../utils/helper';
 

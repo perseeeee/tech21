@@ -16,7 +16,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import { getToken } from '../../../utils/helper';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 import AdminDrawer from '../AdminDrawer';
 import DateTimePicker from '@react-native-community/datetimepicker';
 

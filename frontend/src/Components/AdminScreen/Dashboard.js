@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { LineChart, BarChart, PieChart } from 'react-native-chart-kit';
 import axios from 'axios';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 import { getToken } from '../../utils/helper';
 import AdminDrawer from './AdminDrawer';
 

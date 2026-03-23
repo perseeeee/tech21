@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import { getToken } from '../../../utils/helper';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;

@@ -1,5 +1,5 @@
 // CVPetShop/frontend/src/Components/AdminScreen/ordermanagement/OrderList.js
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -11,9 +11,10 @@ import {
   RefreshControl,
 } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
+import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import { getToken } from '../../../utils/helper';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 import AdminDrawer from '../AdminDrawer';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
@@ -55,6 +56,12 @@ export default function OrderListScreen({ navigation }) {
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchOrders();
+    }, [])
+  );
 
   const onRefresh = () => {
     setRefreshing(true);

@@ -10,7 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import axios from 'axios';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 import { getToken } from '../../../utils/helper';
 import AdminDrawer from '../AdminDrawer';
 

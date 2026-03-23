@@ -14,7 +14,7 @@ import {
   ScrollView,
 } from 'react-native';
 import axios from 'axios';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 import { getToken } from '../../../utils/helper';  // Changed: went up 3 levels
 import UserDrawer from '../UserDrawer';  // Changed: went up 1 level then to UserDrawer
 import Header from '../../layouts/Header';  // Changed: went up 2 levels then to layouts/Header

@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 import UserDrawer from '../UserDrawer';  // Changed: went up 1 level then to UserDrawer
 import Header from '../../layouts/Header';  // Changed: went up 2 levels then to layouts/Header
 
